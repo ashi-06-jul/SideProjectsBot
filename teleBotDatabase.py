@@ -20,13 +20,3 @@ class TeleDB:
         self.conn.commit()
 
 
-
-
-    # def get_items(self, owner):
-    #     try:
-    #         stmt = "SELECT * FROM details WHERE Chat_id = (?)"
-    #         args = (owner,)
-    #         return [x[1:] for x in self.conn.execute(stmt, args)][0]
-    #     except:
-    #         return 'error'
-
