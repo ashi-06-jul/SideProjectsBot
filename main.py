@@ -90,10 +90,11 @@ def status(update, context):
         update.message.reply_text('''We engage students through a 7 Day training program where we provide them assignments, job, and career advice, polish their CV and improve online presence while also giving them tips on client engagement. Press /0 to return to main menu.''')
         return STATUS
     elif text == '/2':
-        update.message.reply_text('''In the process of identifying Interested and enthusiastic candidates, we want you to take an assessment so Press /fillup to take the assesment, This test has total 14 questions, there are no time limits.\nIf you stuck up anywhere, you can complete the questions even after taking multiple breaks.''')
+        update.message.reply_text('''In the process of identifying interested and enthusiastic candidates, we want you to take an assessment so press /fillup to take the assessment. This test has total 14 questions, there are no time limits.
+If you get stuck up anywhere, you can complete the questions even after taking multiple breaks.''')
         return FILL
     elif text == '/3':
-        update.message.reply_text('''Telegram Bot\n Whatsapp Bot\n Zoho-Setup\n Telegram Bot\n Khaata\n Talk Project\n ERP\n Heidi\n EZ Helper\n E-Commerce Website\nPress /0 to return to main menu.''')
+        update.message.reply_text('''We are currently doing projects on:-\n Telegram Bot\n Whatsapp Bot\n Zoho-Setup\n Khaata\n Talk Project\n ERP\n Heidi\n EZ Helper\n E-Commerce Website\nPress /0 to return to main menu.''')
         return STATUS
     elif text=='/4':
         update.message.reply_text('''In the process of identifying Interested and enthusiastic candidates, we want you to take an assessment so Press /fillup to take the assesment, This test has total 14 questions, there are no time limits.\n If you stuck up anywhere, you can complete the questions even after taking multiple breaks.''')
@@ -107,6 +108,8 @@ def fill(update, context):
     text = update.message.text
     if text == '/fillup':
         update.message.reply_text('Do you have access to a laptop/computer - do you need help with internet recharges?',reply_markup=ReplyKeyboardMarkup(SETUP_, one_time_keyboard=True))
+    elif text=='/0':
+        return STATUS
     else:
         update.message.reply_text('Press /fillup to take the assesment')
         return FILL
@@ -120,7 +123,7 @@ def setup(update, context):
     if [text] in SETUP_:
         update.message.reply_text('What is your name?',
                 reply_markup=ReplyKeyboardRemove())
-
+    
     else:
         update.message.reply_text('Please enter the details from options available.',
                 reply_markup=ReplyKeyboardMarkup(SETUP, one_time_keyboard=True))
@@ -132,11 +135,11 @@ def name(update, context):
     context.user_data['name'] = update.message.text
     regex = '[A-Za-z]{2,25}( [A-Za-z]{2,25})?'
 
+    
     if(re.search(regex, context.user_data['name'])):
         update.message.reply_text('Which college are you from?',
                 reply_markup=ReplyKeyboardRemove())
-
-
+    
     else:
         update.message.reply_text('Please enter a valid Name.',
                 reply_markup=ReplyKeyboardRemove())
@@ -530,6 +533,7 @@ def github_id(update, context):
     return GITHUB_REPO
 
 
+
 def github_repository(update, context):
     link = 'https://t.me/joinchat/OI-x6FTHLBCkfWAe7wavug'
     try:
@@ -542,7 +546,6 @@ def github_repository(update, context):
     except GithubException as e:
         update.message.reply_text('Please! Enter a valid Repo Name...')
         return GITHUB_REPO
-
 
 
 
