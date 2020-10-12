@@ -17,7 +17,7 @@ db.setup()
 
 
 
-STATUS,FILL,SETUP,NAME, COLLEGE,PAID_PROJECTS,OPERATING_SYSTEM,RAM_CONFIG,TYPING,AMAZING_THING_WITH_COMPUTER,CODE,EXPERIENCE_LEVEL,LINUX,MULTIPLE_SELECT,PROGRAMMING_LANGUAGE,PROGRAMMING_EXPERIENCE,MULTI_SELECT_FRAMEWORK,FRAMEWORK,STORAGE,INTERESTS,CMD,PLATEFORM_CODING,PROGRAMMING_SHOWCASE, LEADERSHIP, GITHUB_ID, GITHUB_REPO = range(26)
+STATUS,FILL,SETUP,NAME, COLLEGE,PAID_PROJECTS,OPERATING_SYSTEM,RAM_CONFIG,TYPING,AMAZING_THING_WITH_COMPUTER,CODE,EXPERIENCE_LEVEL,LINUX,MULTIPLE_SELECT,PROGRAMMING_LANGUAGE,PROGRAMMING_EXPERIENCE,MULTI_SELECT_FRAMEWORK,FRAMEWORK,STORAGE,INTERESTS,CMD,PLATEFORM_CODING,PROGRAMMING_SHOWCASE, LEADERSHIP, GITHUB_ID, GITHUB_REPO,POINTS = range(27)
 
 PAID_PROJECTS_JOBS=[['yes - money situation is bad'], ['yes - want to earn but can not right away'],['no - open to interesting unpaid opportunities also']]
 OS=[['windows'], ['linux'], ['mac']]
@@ -513,59 +513,141 @@ def leadership(update, context):
         return LEADERSHIP
 
     return GITHUB_ID
-        
+
 
 
 def github_id(update, context):
-    update.message.text
-    try:
-        g.get_user(update.message.text)
-        context.user_data['Github'] = update.message.text
-        update.message.reply_text('Write 100 lines of code in github repo.\n\n'
-                    'Once completed, Share that repository name.')
+    context.user_data['github'] = update.message.text
+
+    update.message.reply_text(
+        f'''
+Displayed below are your details,\n\n
+Name : {context.user_data['name']}\n
+College : {context.user_data['college']}\n
+Github Id : {context.user_data['github']}\n\n
+Please let us know if your previous details were correct. 
+Press "Yes" to confirm or "No" to fill details again''',
+            reply_markup=ReplyKeyboardMarkup(YES_NO_OPTIONS, one_time_keyboard=True))
+    
+    return POINTS
 
 
-    except GithubException as e:
-        update.message.reply_text('Please! Enter a valid GitHub user name...')
-
-        return GITHUB_ID
-
-    return GITHUB_REPO
+  
+    return POINTS
 
 
+def points(update, context):
+    context.user_data['Confirm'] = update.message.text
 
-def github_repository(update, context):
-    link = 'https://t.me/joinchat/OI-x6FTHLBCkfWAe7wavug'
-    try:
-        repo = g.get_repo(f"{context.user_data['Github']}/{update.message.text}")
-        repo.get_contents("/")
-        update.message.reply_text("Great, We will get back to you soon.\n\n"
-        f"Click to join Telgram group {link}\n\n"
+    if context.user_data['Confirm'] == "Yes":
+        link = 'https://t.me/joinchat/OI-x6FTHLBCkfWAe7wavug'
+        update.message.reply_text("Great, We will get back to you soon.\n\n"f"Click to join Telgram group {link}\n\n"
         "Please further communicate with SideProjects admin. Happy Coding!")
-
-    except GithubException as e:
-        update.message.reply_text('Please! Enter a valid Repo Name...')
-        return GITHUB_REPO
-
-
+    else:
+        update.message.reply_text("Press \4 for main menu.")
+        return STATUS
+        
 
 
+    #basics
+    if context.user_data['os'] in ['windows','mac']:
+        context.user_data['basics'] += 1
+    else:
+        context.user_data['b1'] += 2
+    if context.user_data['ram'] in ['1GB or less','2GB - 4GB']:
+        context.user_data['basics'] += 1
+    else:
+        context.user_data['basics'] += 2
+    if context.user_data['ram'] in ['typing takes 50% of my mind','know basic typing']:
+        context.user_data['basics'] += 1
+    else:
+        context.user_data['basics'] += 2
+
+    #programming
+    if context.user_data['code'] in ['have never written code','can read and understand code','can write code but only small programs''have written 100+ lines of code till now','have written 500+ lines of code','have written 1000+ lines of code', 'worked on many projects','earned money writing code']:
+        context.user_data['programming'] += 1
+    elif context.user_data['code'] in ['have written 100+ lines of code till now','have written 500+ lines of code']:
+        context.user_data['programming'] += 2
+    else:
+        context.user_data['programming'] += 3
+
+    if len(context.user_data['Programming_language'].split(',')) < 3:
+        context.user_data['programming'] += len(context.user_data['Programming_language'].split(','))
+    else:
+        context.user_data['programming'] += 3
+   
+
+    # linux
+    if context.user_data['Linux'] in ['Have used linux once but never again', 'Using Linux as the primary operating system', 'Have logged into a remote server'] :
+        context.user_data['programming'] += 1
+    else:
+        context.user_data['programming'] += 2
+
+    
+    # programming_language
+    if len(context.user_data['Programming_language'].split(',')) < 3:
+        context.user_data['programming'] += len(context.user_data['Programming_language'].split(','))
+    else:
+        context.user_data['programming'] += 3
+
+
+    # framework
+    if len(context.user_data['Framework'].split(',')) < 3:
+        context.user_data['Points'] += len(context.user_data['Framework'].split(','))
+    else:
+        context.user_data['Points'] += 3
+
+    # storage
+    if context.user_data['Storage'] in ["Can read from a file using code", 'Used arrays, json or xml like nested data structures', 'Installed and comfortable with databases'] :
+        context.user_data['Points'] += 1
+    else:
+        context.user_data['Points'] += 2
+
+#    db.add_item(context.user_data["setup"],
+ #       context.user_data["name"],
+  #      context.user_data["college"],
+   #     context.user_data["paid_projects"],
+    #    context.user_data["os"],
+     #   context.user_data["ram"],
+      #  context.user_data["typing"], 
+		#context.user_data["computer_work"], 
+#		context.user_data["code"], 
+#		context.user_data["Experience_level"],
+   #     context.user_data["Programming_language"], 
+	#	context.user_data["Programming_experience"], 
+     #  context.user_data["Framework"],
+      #  context.user_data["Storage"],
+       # context.user_data["Interest"],
+       # context.user_data["cmd"],
+       # context.user_data["plateform"],
+       # context.user_data["showcase"],
+       # context.user_data["team_roles"],
+       # context.user_data["github"])
+        
     db.add_item(**context.user_data)
 
-    # Send message to the channel
     context.bot.send_message(chat_id=-1001467021890,text=
         f'''
 New Candidate\n\n
 Name : {context.user_data['Name']}\n
 College : {context.user_data['College']}\n
+Source : {context.user_data['Source']}\n
+Experience_level : {context.user_data['Experience_level']}\n
+Linux Experience : {context.user_data['Linux']}\n
+Programming Language : {context.user_data["Programming_language"]}\n
+programming Experience : {context.user_data["Programming_experience"]}\n
+Framework : {context.user_data["Framework"]}\n
+Storage : {context.user_data["Storage"]}\n
+Interest : {context.user_data['Interest']}\n
+Leadership: {context.user_data['Leadership']}\n
 Github Id : {context.user_data['Github']}\n
 '''
     )
 
-#     context.bot.send_voice(chat_id=-1001467021890, voice=open(f'ReceivedAudio/{update.message.from_user["username"]}.ogg', 'rb'))
-    
+    context.bot.send_voice(chat_id=-1001467021890, voice=open(f'ReceivedAudio/{update.message.from_user["username"]}.ogg', 'rb'))
 
     return ConversationHandler.END
+
 
 
 
@@ -642,7 +724,8 @@ def main():
             
     
             GITHUB_ID: [MessageHandler(Filters.text, github_id)],
-            GITHUB_REPO: [MessageHandler(Filters.text, github_repository)],
+          
+            POINTS: [MessageHandler(Filters.text, points)],
 
             
         },
