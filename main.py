@@ -2,7 +2,7 @@ import re
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, Voice)
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
                           ConversationHandler, )
-
+import sqlite3
 from github import Github, GithubException                    
 
 from teleBotDatabase import TeleDB
@@ -532,17 +532,15 @@ Press "Yes" to confirm or "No" to fill details again''',
     return POINTS
 
 
-  
-    return POINTS
-
-
 def points(update, context):
-    context.user_data['Confirm'] = update.message.text
+    text = update.message.text
 
-    if context.user_data['Confirm'] == "Yes":
+    if text == "Yes":
         link = 'https://t.me/joinchat/OI-x6FTHLBCkfWAe7wavug'
         update.message.reply_text("Great, We will get back to you soon.\n\n"f"Click to join Telgram group {link}\n\n"
         "Please further communicate with SideProjects admin. Happy Coding!")
+        db.add_item(**context.user_data)
+
     else:
         update.message.reply_text("Press \4 for main menu.")
         return STATUS
@@ -624,7 +622,6 @@ def points(update, context):
        # context.user_data["team_roles"],
        # context.user_data["github"])
         
-    db.add_item(**context.user_data)
 
     context.bot.send_message(chat_id=-1001467021890,text=
         f'''
